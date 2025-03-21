@@ -1,3 +1,4 @@
+import inspect
 import logging
 import os
 from logging.handlers import TimedRotatingFileHandler
@@ -13,7 +14,7 @@ class Logger:
     }
 
     __logger = None
-    __log_format = '%(asctime)s [%(levelname)s] %(message)s'
+    __log_format = '%(asctime)s [%(levelname)s] %(custom_filename)s:%(custom_lineno)d %(message)s'
 
     @staticmethod
     def init(log_name="default", log_level="debug", log_dir=""):
@@ -26,31 +27,44 @@ class Logger:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
         Logger.__logger.addHandler(console_handler)
+        Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_filename
 
-        if log_dir != '':
+        if log_dir != "":
             log_dir, _ = os.path.split(log_dir)
             os.makedirs(log_dir, exist_ok=True)
 
+            Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_fullpath
             file_handler = TimedRotatingFileHandler(log_dir, when='D', interval=1, backupCount=14, encoding='utf-8')
             file_handler.setFormatter(formatter)
             Logger.__logger.addHandler(file_handler)
 
     @staticmethod
+    def get_logger_extra_data_with_filename():
+        frame = inspect.stack()[2]
+        return {"custom_filename": frame.filename.split("/")[-1], "custom_lineno": frame.lineno}
+    
+    @staticmethod
+    def get_logger_extra_data_with_fullpath():
+        frame = inspect.stack()[2]
+        return {"custom_filename": frame.filename, "custom_lineno": frame.lineno}
+
+    @staticmethod
     def debug(message):
-        Logger.__logger.debug(message)
+        Logger.__logger.debug(message, extra=Logger.__get_logger_extra_data())
 
     @staticmethod
     def info(message):
-        Logger.__logger.info(message)
+        Logger.__logger.info(message, extra=Logger.__get_logger_extra_data())
 
     @staticmethod
     def warn(message):
-        Logger.__logger.warning(message)
+        Logger.__logger.warning(message, extra=Logger.__get_logger_extra_data())
 
     @staticmethod
     def error(message):
-        Logger.__logger.error(message)
+        Logger.__logger.error(message, extra=Logger.__get_logger_extra_data())
 
     @staticmethod
     def critical(message):
-        Logger.__logger.critical(message)
+        Logger.__logger.critical(message, extra=Logger.__get_logger_extra_data())
+    
