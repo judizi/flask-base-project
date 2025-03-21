@@ -9,7 +9,7 @@ blueprint = Blueprint('blueprint', __name__, url_prefix='/')
 api = Api(blueprint, title="REST API", version="1.0")
 
 
-def list_all_modules(base_package_name):
+def separate_modules_packages(base_package_name):
     modules = []
     packages = []
 
@@ -30,14 +30,11 @@ def import_modules(package_name):
     if hasattr(ns_lib, "path") and ns_lib.path != "":
         api.add_namespace(ns_lib.ns, path=ns_lib.path)
 
-modules, packages = list_all_modules(__name__)
-while len(packages) > 0:
-    for idx, package in enumerate(packages):
-        sub_modules, sub_packages = list_all_modules(package)
-        packages.pop(idx)
-        modules += sub_modules
-        packages += sub_packages
+modules, packages = separate_modules_packages(__name__)
+while packages:
+    sub_modules, sub_packages = separate_modules_packages(packages.pop(0))
+    modules += sub_modules
+    packages += sub_packages
 
-modules = list(dict.fromkeys(modules))
 for module in modules:
     import_modules(module)
