@@ -19,7 +19,7 @@ class Logger:
     @staticmethod
     def init(log_name="default", log_level="debug", log_dir=""):
         Logger.__logger = logging.getLogger(log_name)
-        Logger.__logger.setLevel(Logger.__log_level_map.get(log_level, "debug"))
+        Logger.__logger.setLevel(Logger.__log_level_map.get(log_level, logging.DEBUG))
         Logger.__logger.propagate = False
 
         formatter = logging.Formatter(Logger.__log_format)
