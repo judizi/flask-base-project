@@ -1,8 +1,7 @@
 from http import HTTPStatus
 
 from app.dto.main_dto import MainDto
-from app.dto.response_dto import ResponseDTO
-from app.dto.response_error_dto import get_error_schema
+from app.dto.response_error_dto import get_error_response, get_error_schema
 from app.service.main_service import MainService
 from common.response_code import ResponseCode
 from common.response_messages import RESPONSE_MESSAGES
@@ -21,7 +20,8 @@ main_service = MainService()
 class MainApi(Resource):
     @ns.expect()
     @ns.response(code=HTTPStatus.OK, description=RESPONSE_MESSAGES.get(ResponseCode.SUCCESS), model=main_response)
-    @ns.response(code=HTTPStatus.INTERNAL_SERVER_ERROR, description=RESPONSE_MESSAGES.get(ResponseCode.SERVER_ERROR), model=ns.model('Error', get_error_schema(ResponseCode.SERVER_ERROR)))
+    @ns.response(code=HTTPStatus.INTERNAL_SERVER_ERROR, description=RESPONSE_MESSAGES.get(ResponseCode.SERVER_ERROR), 
+                model=ns.model('Error', get_error_schema(ResponseCode.SERVER_ERROR)))
     def get(self):
         try:
             response = main_service.get_datas()
@@ -30,4 +30,4 @@ class MainApi(Resource):
             return make_response(jsonify(response), HTTPStatus.INTERNAL_SERVER_ERROR)
         
         except Exception as e:
-            return make_response(jsonify(ResponseDTO(code=ResponseCode.SERVER_ERROR, message=str(e))), HTTPStatus.INTERNAL_SERVER_ERROR)
+            return get_error_response(e)
