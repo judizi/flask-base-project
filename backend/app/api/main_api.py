@@ -19,8 +19,8 @@ main_service = MainService()
 @ns.route('main', methods=['GET'])
 class MainApi(Resource):
     @ns.expect()
-    @ns.response(code=HTTPStatus.OK, model=[main_response], description="OK")
-    @ns.response(code=HTTPStatus.INTERNAL_SERVER_ERROR, model=[ns.model('Error', get_error_schema(StatusEnum.FAIL.value))], description="INTERNAL_SERVER_ERROR")
+    @ns.response(code=HTTPStatus.OK, description=StatusEnum.SUCCESS.value, model=[main_response])
+    @ns.response(code=HTTPStatus.INTERNAL_SERVER_ERROR, description=StatusEnum.FAIL.value, model=[ns.model('Error', get_error_schema(StatusEnum.FAIL.value))])
     def get(self):
         try:
             response = main_service.get_datas()
