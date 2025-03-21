@@ -26,8 +26,8 @@ class MainApi(Resource):
         try:
             response = main_service.get_datas()
             if response.code == ResponseCode.SUCCESS:
-                return make_response(jsonify(response.to_dict()), HTTPStatus.OK)
-            return make_response(jsonify(response.to_dict()), HTTPStatus.INTERNAL_SERVER_ERROR)
+                return make_response(jsonify(response), HTTPStatus.OK)
+            return make_response(jsonify(response), HTTPStatus.INTERNAL_SERVER_ERROR)
         
         except Exception as e:
-            return make_response(jsonify(ResponseDTO(code=ResponseCode.SERVER_ERROR, message=str(e)).to_dict()), HTTPStatus.INTERNAL_SERVER_ERROR)
+            return make_response(jsonify(ResponseDTO(code=ResponseCode.SERVER_ERROR, message=str(e))), HTTPStatus.INTERNAL_SERVER_ERROR)
