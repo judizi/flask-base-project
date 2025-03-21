@@ -1,6 +1,7 @@
 from app.dto.response_dto import ResponseDTO
 from app.model.main_model import MainModel
-from common.status_enum import StatusEnum
+from common.response_code import ResponseCode
+from common.response_messages import RESPONSE_MESSAGES
 
 
 class MainService:
@@ -10,4 +11,4 @@ class MainService:
         
     def get_datas(self):
         datas = self.main_model.select_datas()
-        return ResponseDTO(status=StatusEnum.SUCCESS.value, data=datas)
+        return ResponseDTO(code=ResponseCode.SUCCESS, message=RESPONSE_MESSAGES.get(ResponseCode.SUCCESS), data=datas)

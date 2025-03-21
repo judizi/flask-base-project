@@ -1,12 +1,16 @@
+from dataclasses import dataclass
+from typing import Any, Optional
+
+
+@dataclass
 class ResponseDTO:
-    def __init__(self, status, message=None, data=None):
-        self.status = status
-        self.message = message
-        self.data = data
+    code: int
+    message: str
+    data: Optional[Any] = None
 
     def to_dict(self):
         return {
-            "status": self.status,
+            "code": self.code,
             "message": self.message,
             "data": self.data
         }
