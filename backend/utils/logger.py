@@ -17,7 +17,10 @@ class Logger:
     __log_format = '%(asctime)s [%(levelname)s] %(custom_filename)s:%(custom_lineno)d %(message)s'
 
     @staticmethod
-    def init(log_name="default", log_level="debug", log_dir=""):
+    def init(log_name, log_level, log_dir):
+        if log_name == None:
+            log_name = "default"
+
         Logger.__logger = logging.getLogger(log_name)
         Logger.__logger.setLevel(Logger.__log_level_map.get(log_level, logging.DEBUG))
         Logger.__logger.propagate = False
@@ -29,12 +32,13 @@ class Logger:
         Logger.__logger.addHandler(console_handler)
         Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_filename
 
-        if log_dir != "":
+        if log_dir:
             log_dir, _ = os.path.split(log_dir)
             os.makedirs(log_dir, exist_ok=True)
 
+            log_path = f"{log_dir}/{log_name}.log"  
             Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_fullpath
-            file_handler = TimedRotatingFileHandler(log_dir, when='D', interval=1, backupCount=14, encoding='utf-8')
+            file_handler = TimedRotatingFileHandler(log_path, when='D', interval=1, backupCount=14, encoding='utf-8')
             file_handler.setFormatter(formatter)
             Logger.__logger.addHandler(file_handler)
 

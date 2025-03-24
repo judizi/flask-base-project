@@ -10,8 +10,9 @@ class DevelopmentConfig():
 class ProductionConfig():
     MODE = "Production"
 
+    LOG_NAME = "rest_api"
     LOG_LEVEL = "warn"
-    LOG_DIR = "/applog/web/rest_api.log"
+    LOG_DIR = "/applog/web"
 
     RUN_PORT ="9000"
 

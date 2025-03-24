@@ -28,8 +28,9 @@ def create_app(config):
 
     with app.app_context():
         Logger.init(
-            log_level=current_app.config['LOG_LEVEL'],
-            log_dir=current_app.config['LOG_DIR']
+            log_name=current_app.config.get('LOG_NAME', None),
+            log_level=current_app.config.get('LOG_LEVEL', None),
+            log_dir=current_app.config.get('LOG_DIR', None)
         )
 
         atexit.register(handle_exit)
