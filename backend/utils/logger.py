@@ -33,8 +33,8 @@ class Logger:
         Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_filename
 
         if log_dir:
-            log_dir, _ = os.path.split(log_dir)
-            os.makedirs(log_dir, exist_ok=True)
+            log_dir_splitted, _ = os.path.split(log_dir)
+            os.makedirs(log_dir_splitted, exist_ok=True)
 
             log_path = f"{log_dir}/{log_name}.log"  
             Logger.__get_logger_extra_data = Logger.get_logger_extra_data_with_fullpath
